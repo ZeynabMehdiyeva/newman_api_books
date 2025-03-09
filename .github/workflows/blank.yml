@@ -16,4 +16,7 @@ jobs:
       - name: Install Reporter
         run: npm install -g newman-reporter-htmlextra
       - name: Run Postman Collection with HTML Extra Report
-        run: newman run "C:\Users\Admin\Documents\Simple Books API.postman_collection.json" -e "C:\Users\Admin\Documents\simple_books.postman_environment.json"
+        run: |
+          newman run ./collections/Simple_Books_API.postman_collection.json \
+            -e ./environments/simple_books.postman_environment.json \
+            -r htmlextra
