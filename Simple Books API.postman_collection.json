@@ -1,0 +1,572 @@
+{
+	"info": {
+		"_postman_id": "30a229ce-13bc-40f2-a1d8-f61c4743e3d3",
+		"name": "Simple Books API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39310736"
+	},
+	"item": [
+		{
+			"name": "API Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let res_data = pm.response.json();\r",
+							"let my_token = res_data.accessToken;\r",
+							"pm.environment.set(\"token\", my_token);\r",
+							"console.log(res_data.accessToken);\r",
+							"\r",
+							"console.log(pm.request.body.toJSON());\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"The response has all properties\", () => {\r",
+							"    // Cavabı JSON formatına çeviririk\r",
+							"    const responseJson = pm.response.json();\r",
+							" \r",
+							"});\r",
+							"pm.test(\"Body contains string\",() => {\r",
+							"  pm.expect(pm.response.text()).to.include(\"accessToken\");\r",
+							"});\r",
+							"pm.test(\"Successful POST request\", () => {\r",
+							"  pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"pm.test(\"Status code name has string\", () => {\r",
+							"  pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"pm.test(\"Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"pm.test(\"Content-Type header is application/json\", () => {\r",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"let accessToken = pm.response.json();\r",
+							"pm.test(\"Test data type of the response\", () => {\r",
+							"pm.expect(accessToken).to.be.an(\"object\")});\r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.response.to.not.be.empty;\r",
+							"});\r",
+							"pm.test(\"accessToken is a string\", function () {\r",
+							"    pm.expect(pm.response.json().accessToken).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0c41a7df9d9618a4fd5e809efa659cf049375479d7128aae2469cd062cc8496a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"clientName\": \"{{$randomUserName}}\",\r\n   \"clientEmail\": \"{{$randomEmail}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api-clients/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api-clients",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Staus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"let status = pm.response.json();\r",
+							"pm.test(\"Test data type of the response\", () => {\r",
+							"pm.expect(status).to.be.an(\"object\")}); \r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.response.to.not.be.empty;\r",
+							"});\r",
+							"pm.test(\"status is a string\", function () {\r",
+							"    pm.expect(pm.response.json().status).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List of books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response_data = pm.response.json();\r",
+							"pm.test(\"Ressponse should be an array\", function () {\r",
+							"    pm.expect(response_data).to.be.an(\"array\");\r",
+							"});\r",
+							"let ids = response_data.map(obj => obj.id);\r",
+							"pm.test(\"IDs should be an array\", function(){\r",
+							"    pm.expect(ids).to.be.an(\"array\");\r",
+							"});\r",
+							"let id = Math.floor(Math.random() * response_data.length);\r",
+							"pm.environment.set(\"bookID\", id)\r",
+							"console.log (Math.floor(Math.random() * 6 ));\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.response.to.not.be.empty;\r",
+							"});\r",
+							"var schema = {\r",
+							"  \"type\": \"array\",\r",
+							"  \"items\": {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"      \"id\": { \"type\": \"integer\" },\r",
+							"      \"name\": { \"type\": \"string\" },\r",
+							"      \"type\": { \"type\": \"string\" },\r",
+							"      \"available\": { \"type\": \"boolean\" }\r",
+							"    },\r",
+							"    \"required\": [\"id\", \"name\", \"type\", \"available\"]\r",
+							"  }\r",
+							"}\r",
+							"pm.test (\"Validate Schema\", function (){\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/books",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a single book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function (){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"let res_data = pm.response.json();\r",
+							"pm.test(\"Test data type of the response\", () => {\r",
+							"pm.expect(res_data).to.be.an(\"object\")});\r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.response.to.not.be.empty;\r",
+							"});\r",
+							"var schema = {\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"id\": { \"type\": \"integer\" },\r",
+							"    \"name\": { \"type\": \"string\" },\r",
+							"    \"author\": { \"type\": \"string\" },\r",
+							"    \"type\": { \"type\": \"string\" },\r",
+							"    \"price\": { \"type\": \"number\" },\r",
+							"    \"current-stock\": { \"type\": \"integer\" },\r",
+							"    \"available\": { \"type\": \"boolean\" }\r",
+							"  },\r",
+							"  \"required\": [\"id\", \"name\", \"author\", \"type\", \"price\", \"current-stock\", \"available\"]\r",
+							"}\r",
+							"pm.test (\"Validate Schema\", function (){\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/books/{{bookID}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"books",
+						"{{bookID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit an order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let res_data = pm.response.json();\r",
+							"let order_id = res_data.orderId; // orderId dəyərini JSON-dan götürürük\r",
+							"\r",
+							"// Environment Variables-ə orderId göndəririk\r",
+							"pm.environment.set(\"orderId\", order_id);\r",
+							"\r",
+							"console.log(\"Order ID:\", order_id);\r",
+							"\r",
+							"pm.test(\"response status code is 201\", function () {\r",
+							"pm.expect(pm.response.code).to.equal(201);\r",
+							"});\r",
+							"pm.test(\"Successful POST request\", () => {\r",
+							"  pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"pm.test(\"Status code name has string\", () => {\r",
+							"  pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"\r",
+							"let reposne_data = pm.response.json();\r",
+							"let orderId = reposne_data.orderId\r",
+							"pm.collectionVariables.set (\"orderId\", orderId);\r",
+							"console.log(pm.request.body.toJSON);\r",
+							"//pm.test(\"Body contains string\",() => {\r",
+							" // pm.expect(pm.response.text()).to.include(\"created\");\r",
+							"//});\r",
+							"pm.test(\"Body contains string\",() => {\r",
+							"  pm.expect(pm.response.text()).to.include(\"orderId\");\r",
+							"});\r",
+							"pm.test(\"Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"pm.test(\"Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"pm.test(\"Content-Type header is application/json\", () => {\r",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"let created = pm.response.json();\r",
+							"pm.test(\"Test data type of the response\", () => {\r",
+							"pm.expect(created).to.be.an(\"object\")}); \r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.response.to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"bookId\": 3,\r\n  \"customerName\": \"Nilay\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/orders",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/orders",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function (){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"let id = pm.response.json();\r",
+							"pm.test(\"Test data type of the response\", () => {\r",
+							"pm.expect(id).to.be.an(\"object\")}); \r",
+							"let customerName = pm.response.json();\r",
+							"pm.test(\"Test data type of the response\", () => {\r",
+							"pm.expect(customerName).to.be.an(\"object\")}); \r",
+							"pm.test(\"Response body is not empty\", function () {\r",
+							"    pm.response.to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/orders/{{orderId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update an order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"pm.test(\"Response body is empty\", function () {\r",
+							"    pm.response.to.have.body(\"\"); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n{\r\n  \"customerName\": \"zezi\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/{{orderId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"pm.test(\"Response body is empty\", function () {\r",
+							"    pm.response.to.have.body(\"\"); // Boş bir məzmun olmalıdır\r",
+							"});\r",
+							"pm.test(\"Content-Type header is not present\", function () {\r",
+							"    pm.response.to.not.have.header(\"Content-Type\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/orders/{{orderId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://simple-books-api.glitch.me",
+			"type": "string"
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		}
+	]
+}
